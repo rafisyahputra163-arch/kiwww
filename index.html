@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Petualangan Menuju Hatimu</title>
+<style>
+:root{--bg:#fff5f7;--card:#ffffff;--ink:#4a2433;--muted:#9a6b7b;--accent:#e8557a;--soft:#ffd9e2;--shadow:rgba(232,85,122,.2);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1117;--card:#2a1a22;--ink:#ffe8ee;--muted:#c79aaa;--accent:#ff7d9f;--soft:#4a2433;--shadow:rgba(0,0,0,.45)}}
+:root[data-theme="dark"]{--bg:#1d1117;--card:#2a1a22;--ink:#ffe8ee;--muted:#c79aaa;--accent:#ff7d9f;--soft:#4a2433;--shadow:rgba(0,0,0,.45)}
+html,body{min-height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;display:flex;align-items:center;justify-content:center;overflow-x:hidden}
+.wrap{width:100%;max-width:440px;padding:20px;box-sizing:border-box}
+.top{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:14px;margin-bottom:10px;min-height:20px}
+.card{background:var(--card);border-radius:24px;padding:28px 22px;box-shadow:0 10px 30px var(--shadow);text-align:center;animation:in .4s ease}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.emo{font-size:60px;line-height:1.1;margin-bottom:8px}
+h1{font-size:24px;margin:0 0 10px}
+p{font-size:17px;line-height:1.55;margin:0 0 18px;white-space:pre-line}
+button,input{font-family:inherit;font-size:16px;border-radius:14px;box-sizing:border-box;width:100%}
+button{border:0;background:var(--accent);color:#fff;padding:14px;margin-top:10px;cursor:pointer}
+button.alt{background:var(--soft);color:var(--ink)}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.4}
+input{border:2px solid var(--soft);background:var(--bg);color:var(--ink);padding:12px;margin-bottom:10px;text-align:center}
+.lst{max-height:38vh;overflow-y:auto;text-align:left;font-size:15px;line-height:1.5;margin-bottom:8px}
+.lst div{background:var(--bg);border-radius:12px;padding:10px 12px;margin-bottom:8px;white-space:pre-line}
+.fly{position:fixed;bottom:20%;font-size:24px;color:var(--accent);pointer-events:none;animation:up 1.4s ease-out forwards}
+@keyframes up{to{transform:translateY(-220px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.fly,.card{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span>💌 Petualangan Hati</span><span id="hc"></span></div>
+  <div class="card" id="card"></div>
+</div>
+<script>
+var S={nama:"Sayang",aku:"Aku",ken:"",h:0,st:0,L:0,ls:[],cp:[],pro:0,rec:[],lok:""};
+var $=function(i){return document.getElementById(i)};
+function save(){try{localStorage.setItem("ph2",JSON.stringify(S))}catch(e){}}
+function load(){try{var j=localStorage.getItem("ph2");return j?JSON.parse(j):null}catch(e){return null}}
+function sub(s){return s.replace(/\{nama\}/g,S.nama).replace(/\{aku\}/g,S.aku).replace(/\{lok\}/g,S.lok)}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function shuf(a){return a.slice().sort(function(){return Math.random()-.5})}
+var TT=[[0,"Penjelajah Baru"],[5,"Teman Perjalanan"],[12,"Pemburu Hati"],[25,"Penjaga Rasa"],[40,"Belahan Jiwa"],[60,"Cinta Abadi"],[90,"Legenda Cinta"]];
+function title(){var t="";TT.forEach(function(x){if(S.h>=x[0])t=x[1]});return t}
+function upd(){$("hc").textContent=S.pro?("♥ "+S.h+" · "+title()):""}
+function R(e,t,b){
+  var c=$("card");c.innerHTML="";c.style.animation="none";void c.offsetWidth;c.style.animation="";
+  var d=document.createElement("div");d.className="emo";d.textContent=e;c.appendChild(d);
+  var p=document.createElement("p");p.textContent=sub(t);c.appendChild(p);
+  b.forEach(function(o,i){var x=document.createElement("button");x.textContent=sub(o[0]);if(o[2]||(o[2]===undefined&&i%2))x.className="alt";x.onclick=function(){o[1](x)};c.appendChild(x)});
+  upd();return c;
+}
+function hearts(n){for(var i=0;i<n*3;i++){var s=document.createElement("span");s.className="fly";s.textContent="♥";s.style.left=(15+Math.random()*70)+"%";document.body.appendChild(s);setTimeout(function(x){x.remove()},1500,s)}}
+function gain(n){if(n>0){S.h+=n;hearts(n);save()}}
+function out(t,next){R("✨",t,[["Lanjut ➜",next,0]])}
+
+var LOK=[["🌸","taman bunga"],["☕","kafe kecil di sudut jalan"],["🏖️","pantai saat senja"],["🎡","pasar malam"],["📚","perpustakaan tua"],["🏮","kebun lampion"],["🚂","kereta malam"],["⛰️","puncak bukit berbintang"],["🎠","taman bermain sepi"],["🌉","jembatan tepi sungai"]];
+var EV=[
+{t:"{nama} bertemu kucing kecil yang mengeong manja.",c:[["Elus kucingnya","Kucingnya mendengkur. Kamu menggemaskan sekali saat tersenyum begitu.",1],["Beri camilan","Kucingnya langsung jadi sahabat baru. Hatimu memang selembut itu.",1]]},
+{t:"seorang pelukis jalanan menawarkan melukis kalian berdua.",c:[["Mau dong!","Hasilnya: dua sosok bergandengan tangan dikelilingi hati. Persis kenyataan.",2],["Minta dilukis sambil tertawa","Tawamu terekam di kanvas. Kata pelukisnya, itu lukisan paling hidup hari ini.",1]]},
+{t:"angin meniupkan selembar kertas ke kaki {nama}. Tulisannya: “{aku} lagi kangen kamu.”",c:[["Lipat dan simpan","Kertas itu kini ada di saku hatimu.",2],["Balas dengan lambaian","Entah bagaimana, pesanmu sampai juga ke {aku}.",1]]},
+{t:"penjual balon menawarkan balon berbentuk hati.",c:[["Beli satu untuk {aku}","Balonnya terbang ke arah {aku}, membawa pesan sayangmu.",2],["Beli dua, ikat jadi satu","Dua balon itu saling berdekatan. Seperti kalian.",1]]},
+{t:"",ken:1,c:[["Tersenyum mengenang","Kenangan itu hangat, dan masih banyak yang menunggu untuk dibuat bersama.",2],["Peluk kenangan itu erat","Hatimu berdesir. Beberapa momen memang layak dikenang selamanya.",2]]},
+{t:"hujan gerimis turun mendadak.",c:[["Berteduh berdua","Mendengar hujan sambil berdampingan, tanpa perlu berkata apa-apa. Sempurna.",2],["Menari di bawah hujan","Basah semua, tapi tawamu kencang. {aku} pasti ikut bahagia.",1]]},
+{t:"seorang kakek berkata: “Pasangan paling beruntung adalah yang saling menjadi rumah.”",c:[["Mengangguk setuju","Kakek itu tersenyum. “Kalian sudah tahu rupanya.”",1],["Tanya rahasianya","Kata kakek: “Ucapkan sayang tiap hari. Tak perlu bunga, cukup kata.”",2]]},
+{t:"{nama} menemukan kotak musik. Saat dibuka, mengalun lagu pelan.",c:[["Berdansa sendiri","Dansamu kikuk tapi indah. Bintang pun bertepuk tangan.",1],["Bayangkan berdansa dengan {aku}","Dalam bayanganmu, kalian berputar tanpa henti.",2]]},
+{t:"bintang jatuh melintas tepat saat {nama} menoleh.",c:[["Berharap tentang kita","Harapanmu tersimpan: hari-hari yang makin manis.",2],["Berharap {aku} selalu bahagia","Semesta mendengar, dan diam-diam menjanjikannya.",2]]},
+{t:"{nama} menemukan peti tua berisi cermin kecil.",c:[["Lihat ke dalamnya","Yang terlihat: seseorang yang dicintai sepenuh hati. Itu kamu.",2],["Tutup sambil tertawa","Cerminnya berbisik: kamu lebih berharga dari semua harta di dunia.",1]]},
+{t:"ada kembang api kecil yang meluncur entah dari mana.",c:[["Tonton sambil bersandar","Warnanya memantul di matamu. {aku} pasti ingin ada di sampingmu.",2],["Hitung warnanya","Tujuh warna, tapi tak satu pun seindah senyummu.",1]]},
+{t:"seekor burung membawa surat kecil bertuliskan: “Kamu hebat hari ini.”",c:[["Balas dengan terima kasih","Burungnya mengangguk, lalu terbang bangga.",1],["Peluk dirimu sendiri","Kamu memang pantas mendapatkannya. Peluk dari {aku} menyusul!",2]]}
+];
+var RD=[["Apa yang makin dibagi, makin besar?","Cinta","Kue","Uang"],["Tak punya kaki tapi bisa membuat hati berlari. Apa aku?","Rindu","Angin","Roda"],["Makin sering dipakai makin kuat, tapi tak kasat mata. Apa itu?","Kepercayaan","Otot","Sepatu"],["Walau dipisah jarak, apa yang selalu menghubungkan dua orang yang saling sayang?","Hati","Sinyal","Jalan"],["Dimulai dari satu sapaan, tapi bisa berlangsung seumur hidup. Apa itu?","Kisah cinta","Sinetron","Lagu"],["Selalu hangat meski tak ada api. Apa itu?","Pelukan","Selimut","Teh"]];
+var KP=["Pijat 10 menit","Traktir es krim","Satu pelukan panjang tanpa batas waktu","Pilih film malam ini","Dimasakin makanan favorit","Satu hari bebas cuci piring","Jalan berdua tanpa HP","Peluk kalau lagi bete","Tidur siang bareng","Dinyanyikan lagu favoritmu"];
+var LA=["Hari ini aku kembali sadar betapa beruntungnya punya kamu.","Banyak hal indah di dunia, tapi tak ada yang seindah tawamu.","Setiap langkah petualangan ini mengingatkanku padamu.","Aku mungkin tak selalu pandai bicara, tapi hatiku penuh namamu.","Kalau ada tombol untuk mengulang hari bersamamu, kutekan tiap hari."];
+var LB=["Terima kasih sudah sabar, hangat, dan jadi tempat pulang.","Kamu membuat hal biasa terasa luar biasa.","Bersamamu, hari paling berat pun terasa ringan.","Kamu bukan sekadar pacar, tapi sahabat, rumah, dan petualanganku.","Terima kasih sudah memilihku, lagi dan lagi."];
+var LC=["Aku akan terus di sini, selama kamu mau.","Mari terus berpetualang sampai tua.","Ingat: kamu dicintai, hari ini dan seterusnya.","Sampai bertemu di petualangan berikutnya, sayangku.","Semoga harimu manis, seperti kamu."];
+var HT=["Jalan di depan masih panjang dan penuh kejutan.","Langit di atas {nama} berwarna lembut. Ke mana kaki akan melangkah?","Petualangan ini tak punya ujung, selama ada kita.","Angin membawa wangi bunga dari kejauhan."];
+
+function draw(k,n,ok){S.u=S.u||{};var u=S.u[k]=S.u[k]||[],a=[],i;for(i=0;i<n;i++)if(u.indexOf(i)<0&&(!ok||ok(i)))a.push(i);if(!a.length){u=S.u[k]=[];for(i=0;i<n;i++)if(!ok||ok(i))a.push(i)}var x=pick(a);u.push(x);return x}
+EV=EV.concat([
+{t:'seorang anak kecil menggambar hati di tanah dengan ranting.',c:[['Gambar hati di sebelahnya','Dua hati bersebelahan. Dunia terasa lebih lembut.',1],['Foto gambarnya','Fotonya akan dikirim ke {aku} supaya ikut tersenyum.',1]]},
+{t:'sebuah pohon tua punya ukiran inisial yang sudah memudar.',c:[['Tambahkan inisial kalian','Kini pohon itu menyimpan cerita baru dan akan tumbuh bersamanya.',2],['Usap ukirannya pelan','Cerita cinta orang lain mengajarkanmu: yang tulus akan bertahan.',1]]},
+{t:'sebuah toko kecil menjual gantungan kunci berbentuk hati.',c:[['Beli untuk {aku}','Gantungan itu akan jadi pengingat bahwa {aku} selalu ada di pikiranmu.',2],['Beli kembaran untuk berdua','Dua gantungan, satu cerita.',2]]},
+{t:'seorang pemusik jalanan memainkan lagu yang pelan dan hangat.',c:[['Duduk dan mendengarkan','Nadanya terasa seperti pelukan. Kamu merekamnya di hati.',1],['Minta lagu spesial','Pemusiknya memainkan lagu cinta sambil melirik penuh arti ke arahmu.',2]]},
+{t:'awan di langit membentuk sesuatu yang mirip hati.',c:[['Foto awannya','Foto langit itu hadiah gratis dari semesta untukmu.',1],['Tunjuk dan tertawa','Awan pun tersipu karena ditertawakan.',1]]},
+{t:'penjual es krim bertanya, “Rasa apa yang paling manis hari ini?”',c:[['Stroberi merah muda','Manis, tapi tetap kalah dari senyummu.',1],['Cokelat','Cokelat selalu aman, seperti pelukan.',1]]},
+{t:'ada toko bunga yang masih buka malam-malam.',c:[['Pilih bunga kesukaanmu','Ternyata itu bunga paling harum di toko. Seleramu bagus.',2],['Tulis pesan kecil di kartunya','Kartu itu bertuliskan: “Kamu pantas dapat bunga setiap hari.”',1]]},
+{t:'{nama} menemukan bangku kayu bertuliskan: “Duduk di sini, rasakan bahagia.”',c:[['Duduk dan tarik napas','Napas panjang, dada lega. Hari ini kamu sudah melakukan cukup banyak.',2],['Duduk sambil membayangkan {aku}','Rasanya seperti benar-benar mengobrol. Hangat.',1]]},
+{t:'seorang anak menyodorkan segenggam kerang kecil.',c:[['Pilih yang paling bulat','Hal sederhana pun bisa jadi harta.',1],['Pilih dua, satu untuk {aku}','Satu di sakumu, satu menunggu dikirim untuk {aku}.',2]]},
+{t:'lampu jalan menyala satu demi satu seakan menyambut {nama}.',c:[['Berjalan pelan di bawahnya','Setiap lampu seperti berkata: kamu tidak sendirian.',1],['Bayangkan {aku} berjalan di sampingmu','Langkahmu jadi ringan, dan jalannya terasa pendek.',2]]},
+{t:'ada kaca besar yang memantulkan langit senja.',c:[['Berdiri di depannya','Kamu tampak bersinar di antara warna jingga. Itu bukan cahaya senja, itu kamu.',2],['Berpose lucu','Bayanganmu ikut bergaya. Kalian berdua tertawa.',1]]},
+{t:'seorang nenek menawarkan teh hangat.',c:[['Terima dengan senang hati','Tehnya hangat, ceritanya lebih hangat. Kamu jadi ingin menua dengan manis.',1],['Tanya resep cintanya','Kata nenek: “Sabar, dan jangan tidur dalam keadaan marah.”',2]]},
+{t:'sebuah perahu kecil menawarkan {nama} menyeberang.',c:[['Naik dan nikmati arusnya','Airnya tenang. Hari-harimu pun akan begitu kalau dijalani pelan-pelan.',1],['Lambaikan tangan dari tepi','Lambaianmu dibalas angin. Rasanya seperti dipeluk dari jauh.',1]]},
+{t:'lonceng angin berdenting mengikuti irama langkahmu.',c:[['Ikuti nadanya','Denting itu terdengar seperti tawa kecil. Lucu, seperti kamu.',1],['Buat permintaan','Satu permintaan: semoga semua yang kamu sayangi bahagia. Terkabul.',2]]},
+{t:'{nama} menemukan buku harian yang masih kosong.',c:[['Tulis satu hal yang kamu syukuri','Kamu menulis hal-hal kecil yang membuatmu bersyukur. Halamannya langsung terasa penuh.',2],['Tulis nama {aku}','Satu nama saja sudah cukup mengisi seluruh halaman.',1]]},
+{t:'udara pagi terasa seperti pelukan.',c:[['Tarik napas dalam','Dadamu lega. Hari ini akan baik-baik saja.',1],['Rentangkan tangan','Angin memelukmu. Dunia sedang baik hari ini.',1]]},
+{t:'seekor kunang-kunang berputar di dekat {nama}.',c:[['Ikuti cahayanya','Cahaya kecil itu menuntunmu ke tempat yang tenang.',1],['Tangkup dengan lembut','Cahayanya menggelitik telapak tanganmu. Lalu dilepas, tetap bebas, seperti cinta yang baik.',2]]},
+{t:'sebuah kartu pos tua terselip di rak.',c:[['Baca tulisannya','Tertulis: “Rumah adalah orang, bukan tempat.” Kamu langsung teringat {aku}.',2],['Tulis kartu pos untuk {aku}','Kata-katanya sederhana, tapi penuh. Siap dikirim kapan saja.',1]]},
+{t:'ada lomba kecil membuat kapal kertas.',c:[['Ikut lomba','Kapalmu terombang-ambing tapi sampai. Tak perlu menang untuk membuat bangga.',1],['Buat kapal kertas berbentuk hati','Kapal itu melaju paling anggun. Penonton bertepuk tangan.',2]]},
+{t:'angin malam membawa aroma kopi dan roti hangat.',c:[['Ikuti aromanya','Di ujungnya ada kejutan kecil: camilan favoritmu.',2],['Duduk menikmati aromanya','Kadang bahagia cukup sesederhana ini.',1]]}
+]);
+RD=RD.concat([
+['Makin sering dibagikan, makin banyak yang kamu terima. Apa itu?','Senyum','Pajak','Utang'],
+['Ada di dalam dada, bisa patah tapi bisa sembuh. Apa aku?','Hati','Tulang','Jam'],
+['Ditulis berdua, tak pernah selesai. Apa itu?','Kisah cinta','Novel','Koran'],
+['Tak bisa dibeli, tak bisa dijual, tapi bisa diberikan. Apa itu?','Kasih sayang','Tiket','Rumah'],
+['Tumbuh di antara dua hati yang saling percaya. Apa itu?','Cinta','Pohon','Rumput'],
+['Lebih manis dari gula, tapi tak bisa dimakan. Apa itu?','Kata sayang','Madu','Cokelat'],
+['Datang tanpa diundang, sulit dilupakan. Apa itu?','Kenangan','Tamu','Hujan'],
+['Makin dijaga makin kuat, makin diabaikan makin rapuh. Apa itu?','Hubungan','Kaca','Tanaman']
+]);
+KP=KP.concat(['Dibuatkan sarapan','Satu hari bebas dari debat','Didengarkan curhat tanpa disela','Foto berdua di tempat pilihanmu','Surat tulisan tangan','Dipijat kakinya','Piknik kecil berdua','Playlist khusus buatmu','Kamu yang pilih tempat makan','Nonton drama bareng semalaman','Telepon pagi untuk menyemangati','Dibelikan camilan favorit','Satu hari kamu yang atur rencana','Dipeluk 3 menit tanpa bicara']);
+LA=LA.concat(['Kadang aku diam-diam bersyukur, cuma karena kamu ada.','Di antara semua hari, hari yang ada kamu selalu jadi favoritku.','Aku sering tersenyum sendiri kalau ingat caramu tertawa.','Tak banyak orang yang membuatku merasa setenang ini.','Aku menulis ini sambil membayangkan senyummu.','Kalau dunia sedang ribut, namamu jadi tempatku bersandar.','Ada rasa hangat setiap kali namamu muncul di layar.']);
+LB=LB.concat(['Kamu mengajariku bahwa sayang itu sederhana dan tulus.','Aku suka caramu peduli, bahkan pada hal-hal kecil.','Kamu membuatku ingin jadi versi yang lebih baik.','Denganmu, diam pun terasa nyaman.','Aku bangga melihatmu terus berusaha, apa pun hasilnya.','Kamu membuat hari biasa terasa seperti hadiah.','Aku belajar banyak tentang sabar dan hangat darimu.']);
+LC=LC.concat(['Pelan-pelan saja, aku menemanimu.','Peluk jauh dariku, ya, sampai kita bertemu.','Apa pun yang terjadi, kamu tetap berharga.','Istirahat yang cukup, minum yang banyak, dan tersenyumlah.','Aku bangga padamu, hari ini dan selalu.','Sampai nanti, dengan sepenuh hati.','Tetaplah jadi dirimu, aku suka itu.']);
+HT=HT.concat(['Jalan setapak berkilau diterpa cahaya lembut.','Di kejauhan terdengar tawa riang. Mari lanjut!','Hari ini terasa seperti hari baik untuk berjalan.','Langkahmu ringan, hatimu hangat.','Di depan ada kejutan yang menunggu {nama}.','Petualangan berlanjut, dan kamu tidak sendirian.']);
+var SR=[
+"Untuk Nina, seseorang yang begitu berarti buat aku. ❤️\n\nHai, Nina.\n\nAku sebenarnya bingung harus mulai dari mana, karena ada banyak hal yang ingin aku sampaikan, tetapi terkadang semuanya terasa sulit untuk dijelaskan lewat kata-kata. Jadi, lewat surat ini, aku ingin mencoba mengungkapkan sedikit dari apa yang selama ini aku rasakan.\n\nNina, aku bersyukur bisa mengenal kamu dan menjadikanmu bagian dari hidupku. Aku nggak pernah menyangka kalau seseorang bisa menjadi begitu berarti melalui hal-hal sederhana, seperti percakapan kecil, candaan, perhatian, dan waktu yang kita habiskan bersama.",
+"Mungkin aku nggak selalu pandai menunjukkan perasaanku. Terkadang aku terlalu banyak berpikir, khawatir terhadap sesuatu yang belum tentu terjadi, atau melakukan kesalahan tanpa menyadarinya. Aku tahu aku masih punya banyak kekurangan, dan aku nggak akan berpura-pura menjadi seseorang yang sempurna di hadapanmu.\n\nTapi satu hal yang ingin kamu tahu, aku benar-benar menyayangimu, Nina. Bukan hanya karena hal-hal baik yang ada dalam dirimu, tetapi juga karena aku ingin mengenalmu lebih jauh, memahami dirimu, dan belajar menerima bahwa kita berdua punya kekurangan masing-masing.",
+"Aku nggak ingin kamu merasa harus selalu menjadi seseorang yang sempurna ketika bersamaku. Kalau kamu lelah, kamu boleh beristirahat. Kalau kamu sedang banyak pikiran, kamu boleh bercerita atau mengambil waktu untuk dirimu sendiri. Kamu nggak harus selalu terlihat bahagia hanya supaya aku merasa baik-baik saja.\n\nAku ingin menjadi seseorang yang bisa mendengarkan ceritamu tanpa menghakimi, memahami perasaanmu tanpa memaksamu, dan menghargai dirimu tanpa meminta kamu menjadi orang lain.",
+"Aku tahu hubungan nggak akan selalu berjalan mudah. Mungkin akan ada kesalahpahaman, perbedaan pendapat, atau hari-hari ketika kita sama-sama merasa lelah. Tapi aku berharap kita bisa belajar menghadapi semuanya dengan saling mendengarkan, bukan saling menyalahkan.\n\nAku pun masih belajar mengendalikan pikiranku, memahami perasaanmu, dan menjadi seseorang yang lebih baik. Aku ingin memperbaiki diri bukan karena aku harus menjadi sempurna untukmu, melainkan karena aku ingin menyayangimu dengan cara yang lebih dewasa dan tulus.\n\nMaaf kalau selama ini aku belum selalu bisa memahami kamu dengan baik. Maaf kalau terkadang caraku menyampaikan perasaan justru membuatmu bingung. Aku nggak bisa menjanjikan bahwa aku nggak akan pernah melakukan kesalahan lagi, tetapi aku ingin terus belajar dari setiap kesalahan yang aku buat.",
+"Nina, mungkin sekarang aku belum bisa memberikan semua hal yang kamu inginkan. Ada banyak hal yang masih harus aku perjuangkan, dan ada keinginan yang belum bisa aku wujudkan. Tapi aku berharap kamu bisa melihat kesungguhanku melalui hal-hal sederhana yang aku usahakan.\n\nAku ingin membahagiakanmu dengan caraku sendiri, sesuai kemampuanku. Aku ingin membuatmu merasa dihargai, didengarkan, dan disayangi. Aku juga ingin mendukungmu untuk terus berkembang, mengejar impianmu, dan menjadi seseorang yang kamu banggakan.\n\nAku nggak ingin hubungan ini membuat kita kehilangan diri sendiri. Aku ingin kita bisa tumbuh bersama, saling mendukung, dan belajar memahami satu sama lain tanpa harus terburu-buru.",
+"Terima kasih karena sudah hadir dalam hidupku, Nina. Terima kasih untuk setiap cerita, perhatian, waktu, dan hal-hal kecil yang mungkin nggak kamu sadari, tetapi berarti buat aku.\n\nAku menghargai kesempatan untuk mengenalmu lebih jauh. Aku menghargai setiap momen yang kita lalui, dan aku berharap masih ada banyak cerita indah yang bisa kita buat bersama.\n\nAku memang nggak tahu bagaimana perjalanan kita ke depannya. Aku nggak bisa menjanjikan bahwa semuanya akan selalu mudah. Tapi selama kita sama-sama ingin berusaha, aku ingin menjalani hubungan ini dengan sungguh-sungguh, tanpa harus berpura-pura sempurna.\n\nAku ingin menyayangimu bukan hanya ketika semuanya terasa menyenangkan, tetapi juga dengan tetap berusaha memahami kamu ketika keadaan sedang nggak mudah.",
+"Aku ingin kita bisa saling jujur, saling menghargai, dan saling memberikan ruang untuk bertumbuh. Aku ingin kita merasa nyaman menjadi diri sendiri, tanpa harus takut bahwa setiap kekurangan akan membuat kita kehilangan satu sama lain.\n\nNina, kalau suatu hari kamu merasa kurang baik atau merasa belum menjadi seseorang yang kamu inginkan, jangan terlalu keras terhadap dirimu sendiri, ya. Kamu nggak harus sempurna untuk bisa dihargai dan disayangi. Kamu tetap punya banyak hal baik dalam dirimu, bahkan ketika kamu sendiri mungkin belum bisa melihatnya.\n\nAku berharap kamu selalu punya alasan untuk tersenyum, kekuatan untuk menghadapi hari-hari yang berat, dan keberanian untuk terus mengejar apa yang kamu impikan.\n\nDan kalau suatu hari aku melakukan kesalahan, aku berharap kita masih bisa membicarakannya baik-baik. Aku ingin kita terus belajar, bukan menuntut satu sama lain untuk selalu benar.",
+"Pada akhirnya, aku cuma ingin kamu tahu bahwa kehadiranmu berarti buat aku. Aku mungkin nggak selalu bisa mengungkapkan semuanya dengan sempurna, tetapi perasaanku bukan sesuatu yang ingin aku main-mainkan.\n\nAku sayang kamu, Nina. Bukan karena kamu sempurna, melainkan karena aku ingin mengenalmu sebagai dirimu sendiri, menerima bahwa kita punya kekurangan, dan terus belajar menyayangimu dengan lebih baik.\n\nTerima kasih sudah menjadi bagian dari ceritaku. Terima kasih sudah menjadi dirimu sendiri, seseorang yang ingin aku kenal lebih jauh dan yang kebahagiaannya juga berarti buat aku.\n\nSemoga kita bisa terus berjalan pelan-pelan, menikmati setiap prosesnya, dan saling menjaga perasaan tanpa harus menjadi sempurna.\n\nJaga dirimu baik-baik, ya, Nina. Jangan lupa bahagia, jangan terlalu keras sama diri sendiri, dan jangan lupa bahwa kamu juga berhak mendapatkan hal-hal baik dalam hidupmu.\n\nDengan tulus, dari aku untuk kamu, Nina. ❤️"
+];
+function mkLetter(){return "Untuk {nama},\n"+LA[draw('a',LA.length)]+" "+LB[draw('b',LB.length)]+"\n\n"+LC[draw('c',LC.length)]+"\n{aku} ♥"}
+function riddle(done){
+  var q=RD[draw('r',RD.length)];
+  R("🧩",q[0],shuf([q[1],q[2],q[3]]).map(function(a){return[a,function(b){
+    if(a===q[1]){gain(2);out("Betul! Jawabannya “"+q[1]+"”. Kamu pintar sekali, dan {aku} bangga.",done)}
+    else{b.disabled=true;b.textContent="Bukan itu, coba lagi 😘"}},0]}));
+}
+function ev(){
+  
+  var i=draw('e',EV.length,function(i){return !EV[i].ken||S.ken}),e=EV[i],l=LOK[draw('l',LOK.length)];S.lok=l[1];
+  var t=e.ken?"{nama} teringat kenangan kalian: “"+S.ken+"”":"Di {lok}, "+e.t;
+  R(l[0],t,e.c.map(function(o){return[o[0],function(){gain(o[2]);out(o[1],after)},undefined]}));
+}
+function step(){if(S.st%4===3)riddle(after);else ev()}
+function after(){
+  S.st++;save();
+  if(Math.floor(S.h/5)>S.L){var j=S.L++,l,tt="Sebuah surat cinta baru muncul!";if(j<SR.length){l="Bagian "+(j+1)+" dari "+SR.length+"\n\n"+SR[j];tt=j===SR.length-1?"Bagian terakhir terbuka! Seluruh surat dari {aku} kini ada di koleksimu, dan petualangan terus berlanjut tanpa ujung.":"Surat dari {aku} untuk {nama}: bagian "+(j+1)+" terbuka!"}else l=mkLetter();S.ls.push(l);save();return R("💌",tt+"\n\n"+l,[["Simpan ke koleksi",after2,0]])}
+  after2();
+}
+function after2(){
+  if(S.st%5===0){var c=KP[draw('k',KP.length)];S.cp.push(c);save();return R("🎟️","Kamu menemukan kupon cinta:\n\n“"+c+"”\n\n{aku} berjanji menepatinya!",[["Simpan ke koleksi",hub,0]])}
+  hub();
+}
+function hub(){
+  S.pro=1;save();
+  R(pick(["🌄","🛤️","🌙","🌈"]),HT[draw('h',HT.length)],[["Lanjut berjalan 🚶",step,0],["Koleksi kenangan 🎁",coll,1]]);
+}
+function coll(){
+  var c=R("🎁","Koleksi · "+S.h+" hati · "+S.ls.length+" surat · "+S.cp.length+" kupon\nGelar: "+title(),[["Kembali berjalan",hub,0],["Mulai dari awal",function(b){
+    if(b.dataset.s){S=JSON.parse(JSON.stringify({nama:"Sayang",aku:"Aku",ken:"",h:0,st:0,L:0,ls:[],cp:[],pro:0,rec:[],lok:""}));save();setup()}
+    else{b.dataset.s=1;b.textContent="Yakin? Ketuk sekali lagi"}},1]]);
+  var d=document.createElement("div");d.className="lst";
+  S.cp.concat(S.ls).slice().reverse();
+  S.cp.forEach(function(x){var i=document.createElement("div");i.textContent="🎟️ "+x;d.appendChild(i)});
+  S.ls.forEach(function(x){var i=document.createElement("div");i.textContent="💌 "+sub(x);d.appendChild(i)});
+  if(!d.children.length){var i=document.createElement("div");i.textContent="Belum ada koleksi. Terus berjalan, ya!";d.appendChild(i)}
+  c.insertBefore(d,c.querySelector("button"));
+}
+var PR={
+mulai:["🗺️","Pagi itu, {nama} menemukan peta kecil terselip di bawah bantal.\n\nDi pojoknya ada tulisan tangan: “Ikuti aku, ada kejutan di ujung jalan.”",[["Ikuti peta ke taman","taman"],["Sarapan dulu, baru jalan","kafe"]]],
+taman:["🦋","Di taman, seekor kupu-kupu hinggap di bahu {nama}, lalu terbang pelan menuju rumpun mawar merah muda.",[["Petik satu mawar","jembatan"],["Duduk menikmati angin","jembatan"]]],
+kafe:["☕","Di kafe kecil, barista menyodorkan cangkir dengan gambar hati di busanya.\n\nDi bawah cawan ada catatan: “Kamu alasan aku senyum hari ini.”",[["Simpan catatannya","jembatan"],["Baca keras-keras sambil senyum","jembatan"]]],
+gerbang:["🚪","Kotak di jembatan terbuka, dan isinya… sebuah kunci emas berbentuk hati.\n\nDi balik jembatan, sebuah gerbang bercahaya terbuka. Di baliknya ada perjalanan tanpa ujung, penuh kejutan, surat, dan kupon cinta.",[["Melangkah masuk ♥","hub"]]]
+};
+function go(k){
+  if(k==="hub")return hub();
+  if(k==="jembatan"){return R("🌅","Senja turun di jembatan kayu. Sebuah kotak terkunci menunggu, dengan teka-teki di tutupnya.",[["Buka teka-tekinya",function(){riddle(function(){go("gerbang")})},0]])}
+  var d=PR[k];R(d[0],d[1],d[2].map(function(o){return[o[0],function(){gain(1);go(o[1])},undefined]}));
+}
+function setup(){
+  var c=$("card");
+  c.innerHTML='<div class="emo">💕</div><h1>Petualangan Menuju Hatimu</h1><p>Petualangan kecil tanpa ujung, dibuat khusus untukmu.</p><input id="n1" placeholder="Nama si cantikk" maxlength="30"><input id="n2" placeholder="Nama si sigma yang kirim inii" maxlength="30"><button id="go">Mulai petualangan ♥</button>';
+  $("go").onclick=function(){S.nama=$("n1").value.trim()||"Sayang";S.aku=$("n2").value.trim()||"Aku";save();go("mulai")};
+  upd();
+}
+var sv=load();
+if(sv&&sv.pro){S=sv;S.rec=S.rec||[];R("💞","Selamat datang kembali, {nama}! {aku} sudah menunggumu.\n\n♥ "+S.h+" · "+title(),[["Lanjutkan petualangan",hub,0],["Mulai baru",function(){S={nama:"Sayang",aku:"Aku",ken:"",h:0,st:0,L:0,ls:[],cp:[],pro:0,rec:[],lok:""};setup()},1]])}
+else setup();
+</script>
+</body>
+</html>
